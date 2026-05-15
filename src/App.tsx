@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import "./App.css";
 
 function App() {
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState<any[]>([]);
   const [province, setProvince] = useState("");
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
@@ -13,7 +13,7 @@ function App() {
     Papa.parse("/data/projects.csv", {
       download: true,
       header: true,
-      complete: (result) => setRows(result.data.filter((r) => r.name)),
+      complete: (result: any) => setRows(result.data.filter((r: any) => r.name)),
     });
   }, []);
 
