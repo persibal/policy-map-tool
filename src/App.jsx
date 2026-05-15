@@ -266,7 +266,7 @@ function App() {
   const [columns, setColumns] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [fileName, setFileName] = useState("projects.csv");
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(false);
   const [showColumnPanel, setShowColumnPanel] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -302,7 +302,7 @@ function App() {
     setFileName(name);
     setSearch("");
     setFilters({});
-    setShowMap(true);
+    setShowMap(false);
     setExpandedRow(null);
     setSelectedRowId(null);
     setDetailPanelWidth(defaultDetailPanelWidth);
@@ -520,9 +520,9 @@ function App() {
       <header className="hero">
         <h1>Policy Map Tool</h1>
         <p>
-          Upload any CSV file, turn rows into map markers, and click a location
-          to review photos, documents, contact details, tags, and every selected
-          field in a right-side profile panel.
+          Upload any CSV file, filter the table, then choose “Show on Map” or
+          “View details” when you are ready to explore mapped locations and
+          open rich profiles with photos, links, tags, and all fields.
         </p>
       </header>
 
