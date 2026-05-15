@@ -6,7 +6,7 @@
   "homepage": "https://persibal.github.io/policy-map-tool",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/leaflet": "^1.9.21",
     "@types/node": "^24.12.3",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.14",

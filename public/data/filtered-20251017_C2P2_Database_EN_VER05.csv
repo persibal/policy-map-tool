@@ -1,0 +1,353 @@
+Code,Policy Name (Original)
+AB0001,Renewable Electricity Act
+AB0002,Technology Innovation and Emissions Reduction (TIER) Regulation
+AB0003,Municipal Climate Change Action Centre
+AB0004,Clean Energy Improvement Program (CEIP) 
+AB0005,"Green Infrastructure Funding "
+AB0006,Oil Sands Emissions Limit Act
+AB0007,Coal-powered electricity phaseout
+AB0008,Methane Emission Reduction Regulation
+AB0009,Renewable Fuel Standard (RFS) Regulation
+AB0010,Alberta Carbon Capture Incentive Program
+AB0011,Industrial Energy Efficiency and Carbon Capture Utilization and Storage Grant Program
+AB0012,Emissions Reduction Alberta Business Energy Savings Initiatives
+AB0013,Natural Gas Challenge
+AB0014,Environmental Stewardship and Climate Change Producer Program
+AB0015,Emissions Reduction Alberta Technology Funding
+AB0016,Methane Technology Implementation Program (MTIP)
+AB0017,Alberta Methane Emissions Program
+AB0018,Baseline and Reduction Opportunity (BRO) Assessment Program
+BC0001,Highest Efficiency Standards for New Space and Water Heating Equipment
+BC0002,Property Assessed Clean Energy (PACE) program
+BC0003,BC Home Energy Planner
+BC0004,Natural Gas Utilities Emissions Cap
+BC0005,100% Clean Electricity Delivery Standard
+BC0006,BC Energy Step Code
+BC0007,Clean BC Better Homes
+BC0008,Energy Efficiency Standards Regulation
+BC0009,"The CleanBC Building Innovation Fund "
+BC0010,PST changes on heating equipment
+BC0011,Clean Buildings Tax Credit
+BC0012,CleanBC Facilities Electrification Fund 
+BC0013,Greenhouse Gas Reduction (Clean Energy) Regulation
+BC0014,Carbon Tax
+BC0015,British Columbia Carbon Neutral Capital Program
+BC0016,CleanBC Government Buildings Program
+BC0017,CleanBC Communities Fund
+BC0018,CleanBC Go Electric Public Charger Program
+BC0019,CleanBC Go Electric Passenger Vehicle Rebate Program
+BC0020,CleanBC Go Electric Fleets program
+BC0021,CleanBC Go Electric Hydrogen Fuelling Infrastructure
+BC0022,CleanBC Go Electric Rebates
+BC0023,Emotive Community Outreach Incentive Program
+BC0024,CleanBC Go Electric Commercial Vehicle Pilot Program (CVP)
+BC0025,"CleanBC Go Electric School Bus program "
+BC0026,CleanBC Go Electric Home and Workplace Charging Program
+BC0028,PST Exemption for Electricity
+BC0029,Clean Energy Act: Demand Side Management 
+BC0030,Local Government Climate Action Program
+BC0031,BC Indigenous Clean Energy Initiative
+BC0032,First Nations Clean Energy Business Fund
+BC0033,Remote Community Energy Strategy
+BC0034,Electrification Funding Initiatives
+BC0035,BC Zero Carbon Step Code
+BC0036,Low Carbon Fuel Standard
+BC0037,Zero-Emission Vehicle Mandate
+BC0038,Removal of PST on the purchase of e-bikes and e-trikes
+BC0040,Carbon Capture and Storage Regulatory Framework
+BC0041,CleanBC Industry Fund
+BC0044,British Columbia Carbon Neutral Government Program
+BC0045,British Columbia Innovative Clean Energy Fund
+BC0046,British Columbia GHG Emission Control Regulation
+BC0047,Oil and Gas Sector Methane Regulations
+BC0048,Clean Infrastructure Royalty Credit Program
+BC0049,Heavy-Duty Vehicle Efficiency Program
+BC0050,Strengthened tailpipe emissions standards
+BC0051,E-bike rebates
+BC0052,Active Transportation Infrastructure Grants Program
+BC0054,Landfill Gas Management Regulation
+BC0055,BC Centre for Innovation and Clean Energy
+BC0056,Medium- and Heavy-Duty Zero-Emission Vehicles
+BC0057,Output-based Pricing System (OBPS)
+BC0058,"Beneficial Management Practices Program "
+BC0059,"Demand-Side Measures Regulation, 2023 Amendments"
+BC0060,CleanBC Better Buildings
+BC0061,Clean Energy Act: Updated Energy Objectives
+BC0062,Clean Growth Infrastructure Royalty Program
+CA0001,Clean Electricity Regulations
+CA0003,Canada Infrastructure Bank: Clean Power
+CA0004,Canada Infrastructure Bank: Building Retrofits Initiative
+CA0005,Deep Retrofit Accelerator Initiative
+CA0006,"Energy Efficient Buildings Research, Development and Demonstration Program"
+CA0007,Clean Electricity Initiative
+CA0008,Green and Inclusive Community Buildings
+CA0009,Greener Construction in Housing and Buildings
+CA0011,Greener Homes Loan Initiative
+CA0012,Greener Neighbourhoods Pilot
+CA0013,Reduction in Income Tax Rates for Air-Source Heat Pump Manufacturers
+CA0014,Apartment Construction Loan Program
+CA0015,Oil to Heat Pump Affordability (OHPA) Program
+CA0016,Tax Deductions for Business Investments in Air-Source Heat Pumps
+CA0017,Electricity Predevelopment Program
+CA0018,Strategic Intertie Pre-development Program
+CA0019,Reduction of Carbon Dioxide Emissions from Coal-fired Generation of Electricity Regulations
+CA0020,Regulations Limiting Carbon Dioxide Emissions from Natural Gas-fired Generation of Electricity
+CA0021,Smart Grids
+CA0022,Smart Renewables and Electrification Pathways Program
+CA0023,Green Industrial Facilities and Manufacturing Program
+CA0024,Output-Based Pricing System
+CA0025,Federal Fuel Charge
+CA0026,Low Carbon Economy Fund
+CA0027,Low Carbon Economy Challenge
+CA0028,Low Carbon Economy Leadership Fund
+CA0029,Northern REACHE Program (Responsible Energy Approach for Community Heat and Electricity )
+CA0030,Small Modular Reactors
+CA0031,"Wah-ila-toos: Clean Energy Initiatives in Indigenous, rural and remote communities"
+CA0032,Canada Infrastructure Bank: Charging and Hydrogen Refuelling Infrastructure (CHRI)
+CA0033,Zero Emission Vehicle Infrastructure Program (ZEVIP)
+CA0035,Passenger Automobile and Light Truck Greenhouse Gas Emission Regulations
+CA0036,Heavy Duty Vehicle GHG Regulations
+CA0037,Electric Vehicle Availability Standard
+CA0038,Emerging Renewable Power Program
+CA0039,Clean Fuel Regulations
+CA0040,Clean Fuels Fund
+CA0041,Incentives for Zero Emission Medium- and Heavy-Duty Vehicles Program (iMHZEV)
+CA0042,Incentives for Zero-Emissions Vehicles Program (iZEV)
+CA0043,ZEV tax write-off
+CA0044,Agricultural Clean Technology Program: Adoption Stream
+CA0045,Agricultural Clean Technology Program: Research and Innovation Stream
+CA0046,Agricultural Climate Solutions: Living Labs
+CA0047,Agricultural Climate Solutions: On-Farm Climate Action Fund
+CA0048,"Transformative Science, Measurement, and Knowledge Transfer"
+CA0049,Strategic Innovation Fund: Net Zero Accelerator (SIF-NZA)
+CA0050,Energy Innovation Program
+CA0051,Climate Action and Awareness Fund (CAAF)
+CA0052,Clean Technology Investment Tax Credit
+CA0053,"Carbon Capture, Utilization, and Storage Investment Tax Credit"
+CA0054,Nature Smart Climate Solutions Fund
+CA0055,"Transformative Science for Agriculture in a Net-Zero Economy "
+CA0056,Sustainable Development Technology Canada
+CA0057,Regulations Respecting Reduction in the Release of Methane and Certain Volatile Organic Compounds (Upstream Oil and Gas Sector)
+CA0058,Emissions Reduction Fund - Onshore Program
+CA0059,Emissions Reduction Fund - Offshore Deployment Program
+CA0060,Emissions Reduction Fund - Offshore RD&D Program
+CA0062,Emissions Cap on the Oil and Gas Sector
+CA0063,Sustainable Canadian Agricultural Partnership (Sustainable CAP)
+CA0064,Green Freight Program
+CA0066,Low-Carbon Fuel Procurement Program
+CA0067,Canada Public Transit Fund
+CA0068,Zero Emission Transit Fund
+CA0069,Active Transport Fund
+CA0070,Zero-Emissions Trucking Program
+CA0071,Food Waste Reduction Challenge
+CA0072,Canada Infrastructure Bank: Public Transit
+CA0073,Green Infrastructure: Electric Vehicle Infrastructure Demonstrations
+CA0074,Zero-Emission Vehicles Information Portal
+CA0075,Canada Greener Homes Affordability Program
+CA0076,Home Energy Labeling
+CA0077,Arctic Energy Fund
+MB0001,Emissions Tax on Coal and Petroleum Coke
+MB0002,Efficiency Manitoba Act and Energy Savings Targets
+MB0003,Biodiesel Mandate For Diesel Fuel Regulation
+MB0004,"Ag Action Manitoba - Assurance: Environment Beneficial Management Practices (BMPs)
+"
+MB0005,Efficient Trucking Program
+MB0006,Conservation and Climate Fund
+MB0007,Merit-based Low Carbon Economy Fund (LCEF)
+MB0008,Manitoba Electric Vehicle Rebate Program
+MB0009,Green Energy Equipment Tax Credit
+MB0010,Indigenous Loan Guarantee Program
+MB0011,Ethanol General Regulation
+NB0001,Energy Efficiency Act and Regulations
+NB0002,New Brunswick's Output-Based Pricing System (OBPS)
+NB0004,Energy Efficiency Programs
+NB0005,Climate Change Fund
+NB0006,New Brunswick Innovation Foundation Climate & Cleantech Programs
+NB0008,EV Rebates
+NB0009,Provincial Energy Retrofit and Renewable Energy Program
+NB0010,Small Modular Reactor (SMR) research cluster
+NB0011,Ozone Depleting Substances and Other Halocarbons Regulation
+NB0012,Renewable Portfolio Standard
+NB0013,Locally Owned Small Scale Renewable Energy program
+NB0014,Large Industrial Renewable Energy Purchase Program
+NL0001,Home Energy Savings Program
+NL0002,Energy Efficiency and Fuel Switching in Public Buildings
+NL0003,Oil to Electric Incentive Program
+NL0004,Build Better Buildings Policy
+NL0005,Muskrat Falls hydroelectric project
+NL0006,Climate Change Challenge Fund (CCCF)
+NL0007,Newfoundland and Labrador OBPS
+NL0008,Electric vehicle (EV) charging network
+NL0009,EV Rebate Program
+NL0010,Green Transition Fund Program
+NL0011,Green technology tax credit
+NL0013,Methane Regulations
+NL0014,Isolated Communities Energy Efficiency Program
+NT0001,Capital Asset Retrofit Fund
+NT0002,Arctic Energy Alliance Rebate Programs
+NT0003,Arctic Energy Alliance Enhanced Programs and Services
+NT0004,Arctic Energy Alliance Community Engagement
+NT0005,"Arctic Energy Alliance Electric Vehicle Incentive Program
+ 
+"
+NT0006,GHG Grant Program for Government
+NT0007,GHG Grant Program for Buildings and Industry
+NT0008,"Carbon Tax
+"
+NT0009,Net Metering and Community Self-Generating Policy
+NT0010,"Good Building Practices for Northern Facilities "
+NT0011,"Northwest Territories Electric Vehicle Infrastructure Program
+"
+NT0012,Inuvik Wind Project
+NT0013,Fort Province-Kakisa Transmission Line
+NT0014,"Diesel Plant Replacement "
+NT0015,Carbon tax for large emitters
+NS0001,Energy Efficiency Measures for Non-Electrically Heated Homes
+NS0002," Mi’kmaw Home Energy Efficiency Project "
+NS0003,Efficiency Nova Scotia’s Low Income Homeowner Service
+NS0004,Greenhouse Gas Emissions Regulations
+NS0005,Renewable Electricity Regulations
+NS0006,Nova Scotia Electricity Efficiency Regulations
+NS0007,Nova Scotia Electricity Act Amendments
+NS0008,Electrify Nova Scotia Rebate Program
+NS0009,Connect2
+NS0010,Solid Waste Resources Management Regulations
+NS0011,Nova Scotia OBPS
+NS0012,Low Carbon Technology Stream of the Early Stage Commercialization Fund
+NS0013,Low Carbon Communities
+NS0014,The Green Choice Program
+NS0015,Community Solar Program
+NS0016,The Energy Reform (2024) Act
+NS0017,Environmental Stewardship and Climate Change Program
+NS0018,Sustainable Communities Challenge Fund
+NS0019,Nova Scotia Clean Fuels Fund
+NS0020,Clean Energy Fund
+NS0021,Advancing Clean Technologies
+NU0001,Nunavut Energy Management Program
+NU0002,Nunavut Housing Corporation’s Accelerated Modernization and Improvement Project
+NU0003,Renewable Energy Homeowner Grant Program (REHGP)
+NU0004,Renewable Energy Cabin Grant Program (REHGP)
+NU0005,Nunavut Independent Power Producer (IPP) Program
+NU0006,Commercial and Institutional Power Producer (CIPP) program
+NU0007,Net Metering Program
+NU0008,Nunavut New District Heating Systems
+NU0009,Municipal Green Infrastructure Fund
+NU0010,South Baffin Energy Management Project
+NU0011,LED Replacement Project
+NU0012,"Nunavut EnergyWise "
+ON0001,Electricity 2021-2024 Conservation and Demand Management Framework
+ON0002,Changes to Ontario’s Net Metering Regulation to Support Community-Based Energy Systems
+ON0003,Emissions Performance Standards (EPS)
+ON0004,Natural Gas Demand Side Management
+ON0005,Energy Efficiency Standards for Products and Appliances and Equipment (Reg 509/18)
+ON0006,Ontario Regulatory Changes for Reducing Coal Use in Energy-Intensive Industries (Regulation to Streamline the Use of Alternative Low-Carbon Fuels)
+ON0007,"Cleaner Transportation Fuels: Renewable Content Requirements for Gasoline and Diesel Fuels (O. Reg 663/20) "
+ON0008,Ontario Transit Investments
+ON0009,DriveON - Vehicle Emission Testing Program
+ON0010,Subsidies related to electric vehicle production
+ON0011,Ontario Vehicle Innovation Network (OVIN)
+ON0012,Landfill gas regulation (O. Reg. 216/08 and 217/08)
+ON0013,Electric Vehicle Charging Support
+ON0014,Green Bond Program
+ON0016,Planning Act
+ON0017,"Clean Energy Storage "
+ON0018,Wataynikaneyap Power Transmission Project
+ON0019,Hydrogen Innovation Fund
+ON0020,Third-Party Ownership Net Metering
+ON0021,Clean Steel
+ON0022,Broader Public Sector Energy reporting and Benchmarking
+ON0023,Energy and Water Reporting and Benchmarking Program
+PE0001,Renewable Energy Act
+PE0002,Prince Edward Island Greening Government
+PE0003,Building Codes Act
+PE0004,Prince Edward Island Wind Farm Development
+PE0005,Prince Edward Island Energy Efficiency and Fuel Switching Rebate Programs (efficiency PEI)
+PE0006,Energy Rebate
+PE0007,Net Zero Free Heat Pump Program
+PE0008,Slemon Park Microgrid Project
+PE0009,Western Transmission Line Expansion Project
+PE0010,Electric school buses
+PE0011,Climate Challenge Fund
+PE0012,Active Transportation Fund
+PE0013,Carbon Capture Tree Planting Program
+PE0014,Alternative Land Use Services Program
+PE0015,"PEI Electric Vehicle Charging Funding Program "
+PE0016,Prince Edward Island Waste Watch
+PE0017,Electric Vehicle Incentive
+PE0018,Bicycle Rebate
+PE0019,e-Bike Incentive
+PE0020,PEI Agriculture Climate Solutions Program
+PE0021,Rural Transit Pilot Program
+PE0022,Transit subsidy
+PE0023,"Renewables in Agriculture Program "
+PE0024,Solar Electric Rebate Program
+PE0025,Net Zero Free Programs
+QC0001,Règlement sur les appareils de chauffage au mazout
+QC0002,Système de plafonnement et d’échange de droits d’émission
+QC0003,Code de construction du Québec
+QC0004,Réglementation encadrant le gaz naturel renouvelable
+QC0005,Programme ÉcoPerformance du Québec
+QC0006,Programme Éconologis du Québec
+QC0007,Programme Chauffez vert du Québec
+QC0008,Programme Novoclimat du Québec
+QC0009,Aide financière pour une borne de recharge
+QC0010,Obligation concernant l’activation des limiteurs de vitesse à 105 km/h
+QC0011,Règlement sur l’intégration de contenu à faible intensité carbone dans l’essence et le carburant diesel
+QC0012,Programme Écobus
+QC0013,Programme Écocamionnage du Québec
+QC0014,"Programme en efficacité du transport maritime, aérien et ferroviaire (PETMAF) du Québec"
+QC0015,Programme d’aide au développement du transport collectif (PADTC) du Québec
+QC0016,Norme véhicules zéro émission
+QC0017,Transportez vert
+QC0018,Aide financière pour un véhicule électrique
+QC0019,Programme d’électrification du transport scolaire du Québec
+QC0020,Programme d’aide aux nouvelles mobilités (NOMO)
+QC0021,Programme d’aide financière au développement des transports actifs dans les périmètres urbains (TAPU)
+QC0022,Programme d’innovation en construction bois
+QC0023,Règlement sur les halocarbures du Québec
+QC0024,Planification et mise en œuvre de projets d’énergie renouvelable dans les communautés hors réseau
+QC0025,Programme Technoclimat du Québec
+QC0026,Programme de traitement des matières organiques par biométhanisation et compostage du Québec
+QC0027,Règlement sur l’enfouissement et l’incinération de matières résiduelles
+QC0028,"Règlement sur les redevances exigibles pour l’élimination de matières résiduelles
+"
+QC0029,Programme Aide au compostage domestique et communautaire
+QC0030,Programme d’extension du réseau triphasé
+QC0031,De l’aluminium propre au Québec
+QC0032,Valorisation des rejets thermiques
+QC0033,Programme de soutien au secteur privé pour le déploiement de bornes de recharge rapide publiques
+QC0034,Le programme Bioénergies
+QC0035,Interdiction de recherche et de production d’hydrocarbures
+QC0036,Programme de soutien à la production de gaz naturel renouvelable
+QC0037,Appui à la lutte contre les changements climatiques dans le secteur bioalimentaire
+QC0038,"Programme de soutien à la modernisation de l’industrie du transport par taxi (PSMITT) "
+QC0039,"Programme Défi GES – Industrie "
+QC0040,"Mesure d’aide pour la décarbonisation du secteur industriel québécois (MADI) "
+QC0041,Soutenir la R et D et la mise à l’essai de technologies de rupture pour réduire les émissions des procédés industriels ou séquestrer chimiquement ou géologiquement le carbone
+QC0042,Rénoclimat program
+QC0043,"Boiser et reboiser en forêts publiques et privées pour atténuer les changements climatiques "
+SK0001,Building Energy Efficiency Standards
+SK0003,Energy Efficiency Rebates
+SK0004,Ethanol Fuel (General) Regulations
+SK0005,Renewable Diesel Act
+SK0006,SaskPower Shand Greenhouse Seedlings
+SK0007,Output-Based Performance Standards
+SK0008,Management and Reduction of Greenhouse Gases (General and Electricity Producer) Regulations
+SK0009,Oil and Gas Emissions Management Regulations
+SK0010,Short Line Rail Program
+SK0011,Government Vehicles Right Sizing and Best Practice Procurement Program
+SK0012,Saskatchewan Technology Fund
+SK0013,SaskPower Demand Response Program
+SK0014,SaskPower Energy Assistance Program
+SK0015,Irrigation Efficiency Program
+YT0001,Yukon Independent Power Production Policy
+YT0002,Yukon Microgeneration Policy
+YT0003,Government of Yukon Building Retrofits
+YT0004,Yukon Good Energy Rebates
+YT0005,Good Energy Commercial and Institutional Program
+YT0006,Renewable Heating Adoption
+YT0007,"Better Buildings Program "
+YT0008,Renewable Home Energy Rebates
+YT0009,"Yukon Green Infrastructure Program "
+YT0010,ZEV sales rebates
+YT0011,Renewable Fuel Regulations
