@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import Papa from "papaparse";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,6 +14,9 @@ const markerIcon = new L.Icon({
 
 const hiddenColumns = ["latitude", "longitude", "lat", "lng", "long"];
 const urlPattern = /^https?:\/\//i;
+const defaultDetailPanelWidth = 360;
+const minDetailPanelWidth = 320;
+const maxDetailPanelWidth = 900;
 
 const normalize = (text) => String(text || "").trim().toLowerCase();
 
@@ -95,15 +98,25 @@ function MapFocus({ row }) {
   return null;
 }
 
+function MapSizeInvalidator({ panelWidth, hasDetailPanel }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.invalidateSize();
+    const timeoutId = window.setTimeout(() => map.invalidateSize(), 180);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [map, panelWidth, hasDetailPanel]);
+
+  return null;
+}
+
 function DetailPanel({
   row,
   visibleColumns,
   onClose,
   onExport,
-  onMakeNarrower,
-  onMakeWider,
-  canMakeNarrower,
-  canMakeWider,
+  onResizeStart,
   panelWidth,
 }) {
   if (!row) {
@@ -146,29 +159,21 @@ function DetailPanel({
 
   return (
     <aside className="detailPanel">
+      <div
+        className="panelResizeHandle"
+        onPointerDown={onResizeStart}
+        role="separator"
+        aria-label="Resize location details panel"
+        aria-orientation="vertical"
+        title="Drag left or right to resize details"
+      />
       <div className="detailPanelHeader">
         <div>
           <div className="panelEyebrow">Location detail</div>
           <h2>{title}</h2>
         </div>
         <div className="panelHeaderActions">
-          <button
-            className="panelSizeButton"
-            onClick={onMakeNarrower}
-            disabled={!canMakeNarrower}
-            title="Make details panel narrower"
-          >
-            Smaller
-          </button>
           <span className="panelWidthLabel">{panelWidth}px</span>
-          <button
-            className="panelSizeButton"
-            onClick={onMakeWider}
-            disabled={!canMakeWider}
-            title="Make details panel wider"
-          >
-            Wider
-          </button>
           <button
             className="iconButton"
             onClick={onClose}
@@ -265,13 +270,12 @@ function App() {
   const [showColumnPanel, setShowColumnPanel] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
-  const [detailPanelWidthIndex, setDetailPanelWidthIndex] = useState(1);
+  const [detailPanelWidth, setDetailPanelWidth] = useState(defaultDetailPanelWidth);
+  const [isResizingDetailPanel, setIsResizingDetailPanel] = useState(false);
+  const mapDetailLayoutRef = useRef(null);
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({});
-
-  const detailPanelWidths = [360, 480, 640, 780];
-  const detailPanelWidth = detailPanelWidths[detailPanelWidthIndex];
 
   const visibleColumns = columns.filter((column) => !isHiddenColumn(column));
 
@@ -301,7 +305,7 @@ function App() {
     setShowMap(true);
     setExpandedRow(null);
     setSelectedRowId(cleanData[0]?.__rowId || null);
-    setDetailPanelWidthIndex(1);
+    setDetailPanelWidth(defaultDetailPanelWidth);
   };
 
   useEffect(() => {
@@ -314,6 +318,41 @@ function App() {
       },
     });
   }, []);
+
+  useEffect(() => {
+    if (!isResizingDetailPanel) return undefined;
+
+    const handlePointerMove = (event) => {
+      const layoutRect = mapDetailLayoutRef.current?.getBoundingClientRect();
+      if (!layoutRect) return;
+
+      const availableMaxWidth = Math.max(
+        minDetailPanelWidth,
+        layoutRect.width - minDetailPanelWidth
+      );
+      const nextWidth = layoutRect.right - event.clientX;
+      const clampedWidth = Math.min(
+        Math.max(nextWidth, minDetailPanelWidth),
+        Math.min(maxDetailPanelWidth, availableMaxWidth)
+      );
+
+      setDetailPanelWidth(Math.round(clampedWidth));
+    };
+
+    const stopResizing = () => setIsResizingDetailPanel(false);
+
+    document.body.classList.add("isResizingDetailPanel");
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", stopResizing);
+    window.addEventListener("pointercancel", stopResizing);
+
+    return () => {
+      document.body.classList.remove("isResizingDetailPanel");
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", stopResizing);
+      window.removeEventListener("pointercancel", stopResizing);
+    };
+  }, [isResizingDetailPanel]);
 
   const getUniqueValues = (columnName) => {
     return [
@@ -363,6 +402,19 @@ function App() {
         Number(getLng(mapReferenceRow)) || -75.6972,
       ]
     : [45.4215, -75.6972];
+
+  const openDetailPanel = (rowId) => {
+    if (!selectedRowId) {
+      setDetailPanelWidth(defaultDetailPanelWidth);
+    }
+
+    setSelectedRowId(rowId);
+  };
+
+  const startDetailPanelResize = (event) => {
+    event.preventDefault();
+    setIsResizingDetailPanel(true);
+  };
 
   const handleCSVUpload = (event) => {
     const file = event.target.files[0];
@@ -557,6 +609,7 @@ function App() {
 
       {showMap && (
         <div
+          ref={mapDetailLayoutRef}
           className={`mapDetailLayout ${selectedRow ? "hasDetailPanel" : ""}`}
           style={{ "--detail-panel-width": `${detailPanelWidth}px` }}
         >
@@ -572,6 +625,10 @@ function App() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <MapFocus row={selectedRow} />
+              <MapSizeInvalidator
+                panelWidth={detailPanelWidth}
+                hasDetailPanel={Boolean(selectedRow)}
+              />
 
               {mapRows.map((row) => (
                 <Marker
@@ -579,14 +636,14 @@ function App() {
                   position={[Number(getLat(row)), Number(getLng(row))]}
                   icon={markerIcon}
                   eventHandlers={{
-                    click: () => setSelectedRowId(row.__rowId),
+                    click: () => openDetailPanel(row.__rowId),
                   }}
                 >
                   <Popup>
                     <div className="popupCard">
                       <strong>{getTitle(row) || "Location"}</strong>
                       {[getCity(row), getCountry(row)].filter(Boolean).join(", ")}
-                      <button onClick={() => setSelectedRowId(row.__rowId)}>
+                      <button onClick={() => openDetailPanel(row.__rowId)}>
                         View details
                       </button>
                     </div>
@@ -602,16 +659,7 @@ function App() {
               visibleColumns={visibleColumns}
               onClose={() => setSelectedRowId(null)}
               onExport={exportSelectedDetails}
-              onMakeNarrower={() =>
-                setDetailPanelWidthIndex((index) => Math.max(index - 1, 0))
-              }
-              onMakeWider={() =>
-                setDetailPanelWidthIndex((index) =>
-                  Math.min(index + 1, detailPanelWidths.length - 1)
-                )
-              }
-              canMakeNarrower={detailPanelWidthIndex > 0}
-              canMakeWider={detailPanelWidthIndex < detailPanelWidths.length - 1}
+              onResizeStart={startDetailPanelResize}
               panelWidth={detailPanelWidth}
             />
           ) : (
@@ -661,7 +709,7 @@ function App() {
                       <button
                         className="viewButton"
                         onClick={() => {
-                          setSelectedRowId(row.__rowId);
+                          openDetailPanel(row.__rowId);
                           setShowMap(true);
                         }}
                       >

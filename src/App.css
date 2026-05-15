@@ -479,7 +479,7 @@ tr:hover td:first-child {
 }
 /* Map + detail panel layout */
 .mapDetailLayout {
-  --detail-panel-width: 480px;
+  --detail-panel-width: 360px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 18px;
@@ -488,7 +488,7 @@ tr:hover td:first-child {
 }
 
 .mapDetailLayout.hasDetailPanel {
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, var(--detail-panel-width));
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, var(--detail-panel-width));
 }
 
 .mapDetailLayout .mapBox {
@@ -504,6 +504,7 @@ tr:hover td:first-child {
   padding: 18px;
   max-height: 680px;
   overflow: auto;
+  position: relative;
 }
 
 .emptyDetailPanel {
@@ -530,24 +531,40 @@ tr:hover td:first-child {
   gap: 8px;
 }
 
-.panelSizeButton {
-  border: 1px solid #d8e5e7;
+.panelResizeHandle {
+  bottom: 12px;
+  cursor: col-resize;
+  left: -10px;
+  position: absolute;
+  top: 12px;
+  touch-action: none;
+  width: 18px;
+  z-index: 20;
+}
+
+.panelResizeHandle::before {
+  background: #b8c9ce;
   border-radius: 999px;
-  background: #f8fbfb;
-  color: #315f66;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 8px 10px;
+  bottom: 12px;
+  content: "";
+  left: 8px;
+  opacity: 0.55;
+  position: absolute;
+  top: 12px;
+  transition: 0.2s ease;
+  width: 3px;
 }
 
-.panelSizeButton:hover:not(:disabled) {
-  background: #e5f1ee;
+.panelResizeHandle:hover::before,
+.isResizingDetailPanel .panelResizeHandle::before {
+  background: #315f66;
+  opacity: 1;
+  width: 4px;
 }
 
-.panelSizeButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
+.isResizingDetailPanel {
+  cursor: col-resize;
+  user-select: none;
 }
 
 .panelWidthLabel {
@@ -800,6 +817,10 @@ tr:hover td:first-child {
 
   .detailPanel {
     max-height: none;
+  }
+
+  .panelResizeHandle {
+    display: none;
   }
 }
 
