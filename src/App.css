@@ -479,11 +479,16 @@ tr:hover td:first-child {
 }
 /* Map + detail panel layout */
 .mapDetailLayout {
+  --detail-panel-width: 480px;
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   align-items: stretch;
   margin: 20px 0;
+}
+
+.mapDetailLayout.hasDetailPanel {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, var(--detail-panel-width));
 }
 
 .mapDetailLayout .mapBox {
@@ -516,6 +521,54 @@ tr:hover td:first-child {
   gap: 12px;
   margin-bottom: 14px;
 }
+
+.panelHeaderActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.panelSizeButton {
+  border: 1px solid #d8e5e7;
+  border-radius: 999px;
+  background: #f8fbfb;
+  color: #315f66;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 10px;
+}
+
+.panelSizeButton:hover:not(:disabled) {
+  background: #e5f1ee;
+}
+
+.panelSizeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.panelWidthLabel {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.closedDetailHint {
+  background: #ffffff;
+  border: 1px dashed #b8c9ce;
+  border-radius: 18px;
+  color: #64748b;
+  padding: 16px 18px;
+  text-align: center;
+}
+
+.closedDetailHint strong {
+  color: #315f66;
+}
+
 
 .panelEyebrow {
   color: #2c7a7b;
@@ -740,7 +793,8 @@ tr:hover td:first-child {
 }
 
 @media (max-width: 980px) {
-  .mapDetailLayout {
+  .mapDetailLayout,
+  .mapDetailLayout.hasDetailPanel {
     grid-template-columns: 1fr;
   }
 

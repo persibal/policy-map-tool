@@ -95,7 +95,17 @@ function MapFocus({ row }) {
   return null;
 }
 
-function DetailPanel({ row, visibleColumns, onClose, onExport }) {
+function DetailPanel({
+  row,
+  visibleColumns,
+  onClose,
+  onExport,
+  onMakeNarrower,
+  onMakeWider,
+  canMakeNarrower,
+  canMakeWider,
+  panelWidth,
+}) {
   if (!row) {
     return (
       <aside className="detailPanel emptyDetailPanel">
@@ -141,9 +151,33 @@ function DetailPanel({ row, visibleColumns, onClose, onExport }) {
           <div className="panelEyebrow">Location detail</div>
           <h2>{title}</h2>
         </div>
-        <button className="iconButton" onClick={onClose} aria-label="Close details">
-          ×
-        </button>
+        <div className="panelHeaderActions">
+          <button
+            className="panelSizeButton"
+            onClick={onMakeNarrower}
+            disabled={!canMakeNarrower}
+            title="Make details panel narrower"
+          >
+            Smaller
+          </button>
+          <span className="panelWidthLabel">{panelWidth}px</span>
+          <button
+            className="panelSizeButton"
+            onClick={onMakeWider}
+            disabled={!canMakeWider}
+            title="Make details panel wider"
+          >
+            Wider
+          </button>
+          <button
+            className="iconButton"
+            onClick={onClose}
+            aria-label="Close details"
+            title="Close location details"
+          >
+            ×
+          </button>
+        </div>
       </div>
 
       <div className="photoFrame">
@@ -231,9 +265,13 @@ function App() {
   const [showColumnPanel, setShowColumnPanel] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [detailPanelWidthIndex, setDetailPanelWidthIndex] = useState(1);
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({});
+
+  const detailPanelWidths = [360, 480, 640, 780];
+  const detailPanelWidth = detailPanelWidths[detailPanelWidthIndex];
 
   const visibleColumns = columns.filter((column) => !isHiddenColumn(column));
 
@@ -263,6 +301,7 @@ function App() {
     setShowMap(true);
     setExpandedRow(null);
     setSelectedRowId(cleanData[0]?.__rowId || null);
+    setDetailPanelWidthIndex(1);
   };
 
   useEffect(() => {
@@ -315,13 +354,14 @@ function App() {
   });
 
   const selectedRow =
-    filteredRows.find((row) => row.__rowId === selectedRowId) ||
-    mapRows[0] ||
-    filteredRows[0] ||
-    null;
+    filteredRows.find((row) => row.__rowId === selectedRowId) || null;
+  const mapReferenceRow = selectedRow || mapRows[0] || filteredRows[0] || null;
 
-  const mapCenter = selectedRow
-    ? [Number(getLat(selectedRow)) || 45.4215, Number(getLng(selectedRow)) || -75.6972]
+  const mapCenter = mapReferenceRow
+    ? [
+        Number(getLat(mapReferenceRow)) || 45.4215,
+        Number(getLng(mapReferenceRow)) || -75.6972,
+      ]
     : [45.4215, -75.6972];
 
   const handleCSVUpload = (event) => {
@@ -516,7 +556,10 @@ function App() {
       </div>
 
       {showMap && (
-        <div className="mapDetailLayout">
+        <div
+          className={`mapDetailLayout ${selectedRow ? "hasDetailPanel" : ""}`}
+          style={{ "--detail-panel-width": `${detailPanelWidth}px` }}
+        >
           <div className="mapBox">
             <MapContainer
               center={mapCenter}
@@ -553,12 +596,30 @@ function App() {
             </MapContainer>
           </div>
 
-          <DetailPanel
-            row={selectedRow}
-            visibleColumns={visibleColumns}
-            onClose={() => setSelectedRowId(null)}
-            onExport={exportSelectedDetails}
-          />
+          {selectedRow ? (
+            <DetailPanel
+              row={selectedRow}
+              visibleColumns={visibleColumns}
+              onClose={() => setSelectedRowId(null)}
+              onExport={exportSelectedDetails}
+              onMakeNarrower={() =>
+                setDetailPanelWidthIndex((index) => Math.max(index - 1, 0))
+              }
+              onMakeWider={() =>
+                setDetailPanelWidthIndex((index) =>
+                  Math.min(index + 1, detailPanelWidths.length - 1)
+                )
+              }
+              canMakeNarrower={detailPanelWidthIndex > 0}
+              canMakeWider={detailPanelWidthIndex < detailPanelWidths.length - 1}
+              panelWidth={detailPanelWidth}
+            />
+          ) : (
+            <div className="closedDetailHint">
+              <strong>Location details closed.</strong> Click a map marker or
+              “View details” in the table to reopen the profile panel.
+            </div>
+          )}
         </div>
       )}
 
