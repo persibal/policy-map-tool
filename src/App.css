@@ -573,20 +573,6 @@ tr:hover td:first-child {
   font-weight: 800;
 }
 
-.closedDetailHint {
-  background: #ffffff;
-  border: 1px dashed #b8c9ce;
-  border-radius: 18px;
-  color: #64748b;
-  padding: 16px 18px;
-  text-align: center;
-}
-
-.closedDetailHint strong {
-  color: #315f66;
-}
-
-
 .panelEyebrow {
   color: #2c7a7b;
   font-size: 12px;

@@ -304,7 +304,7 @@ function App() {
     setFilters({});
     setShowMap(true);
     setExpandedRow(null);
-    setSelectedRowId(cleanData[0]?.__rowId || null);
+    setSelectedRowId(null);
     setDetailPanelWidth(defaultDetailPanelWidth);
   };
 
@@ -635,9 +635,6 @@ function App() {
                   key={row.__rowId}
                   position={[Number(getLat(row)), Number(getLng(row))]}
                   icon={markerIcon}
-                  eventHandlers={{
-                    click: () => openDetailPanel(row.__rowId),
-                  }}
                 >
                   <Popup>
                     <div className="popupCard">
@@ -653,7 +650,7 @@ function App() {
             </MapContainer>
           </div>
 
-          {selectedRow ? (
+          {selectedRow && (
             <DetailPanel
               row={selectedRow}
               visibleColumns={visibleColumns}
@@ -662,11 +659,6 @@ function App() {
               onResizeStart={startDetailPanelResize}
               panelWidth={detailPanelWidth}
             />
-          ) : (
-            <div className="closedDetailHint">
-              <strong>Location details closed.</strong> Click a map marker or
-              “View details” in the table to reopen the profile panel.
-            </div>
           )}
         </div>
       )}
