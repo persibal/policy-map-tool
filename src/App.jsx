@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import Papa from "papaparse";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./App.css";
@@ -12,6 +12,255 @@ const markerIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+const hiddenColumns = ["latitude", "longitude", "lat", "lng", "long"];
+const urlPattern = /^https?:\/\//i;
+const defaultDetailPanelWidth = 360;
+const minDetailPanelWidth = 320;
+const maxDetailPanelWidth = 900;
+
+const normalize = (text) => String(text || "").trim().toLowerCase();
+
+const isHiddenColumn = (column) => hiddenColumns.includes(normalize(column));
+
+const getColumnValue = (row, aliases) => {
+  const exactColumn = Object.keys(row).find((column) =>
+    aliases.some((alias) => normalize(column) === alias)
+  );
+
+  if (exactColumn && row[exactColumn]) return row[exactColumn];
+
+  const partialColumn = Object.keys(row).find((column) =>
+    aliases.some((alias) => normalize(column).includes(alias))
+  );
+
+  return partialColumn ? row[partialColumn] : "";
+};
+
+const splitListValue = (value) =>
+  String(value || "")
+    .split(/[,;|\n]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const isImageColumn = (column) => {
+  const name = normalize(column);
+  return ["image", "photo", "picture", "gallery", "thumbnail"].some((term) =>
+    name.includes(term)
+  );
+};
+
+const isLinkColumn = (column) => {
+  const name = normalize(column);
+  return ["website", "url", "link", "document", "attachment", "source"].some(
+    (term) => name.includes(term)
+  );
+};
+
+const getLat = (row) => getColumnValue(row, ["latitude", "lat"]);
+
+const getLng = (row) =>
+  getColumnValue(row, ["longitude", "lng", "long", "lon"]);
+
+const getTitle = (row) =>
+  getColumnValue(row, ["name", "project name", "policy name", "title", "project"]);
+
+const getCity = (row) => getColumnValue(row, ["city", "town", "municipality"]);
+
+const getCountry = (row) =>
+  getColumnValue(row, ["country", "nation", "province", "state", "region"]);
+
+const getCategory = (row) => getColumnValue(row, ["category", "type", "theme"]);
+
+const getStatus = (row) => getColumnValue(row, ["status", "stage", "phase"]);
+
+const getDescription = (row) =>
+  getColumnValue(row, ["description", "summary", "details", "overview", "notes"]);
+
+const getContact = (row) =>
+  getColumnValue(row, ["contact", "email", "phone", "organization", "owner"]);
+
+const getTags = (row) => getColumnValue(row, ["tags", "keywords", "topics"]);
+
+function MapFocus({ row }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!row) return;
+
+    const lat = Number(getLat(row));
+    const lng = Number(getLng(row));
+
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      map.flyTo([lat, lng], Math.max(map.getZoom(), 6), { duration: 0.6 });
+    }
+  }, [map, row]);
+
+  return null;
+}
+
+function MapSizeInvalidator({ panelWidth, hasDetailPanel }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.invalidateSize();
+    const timeoutId = window.setTimeout(() => map.invalidateSize(), 180);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [map, panelWidth, hasDetailPanel]);
+
+  return null;
+}
+
+function DetailPanel({
+  row,
+  visibleColumns,
+  onClose,
+  onExport,
+  onResizeStart,
+  panelWidth,
+}) {
+  if (!row) {
+    return (
+      <aside className="detailPanel emptyDetailPanel">
+        <div className="panelEyebrow">Location detail</div>
+        <h2>Select a marker</h2>
+        <p>
+          Click any map marker or the “View details” button in the table to open
+          a full project or policy profile with photos, links, contact info, and
+          all CSV fields.
+        </p>
+      </aside>
+    );
+  }
+
+  const title = getTitle(row) || "Untitled location";
+  const city = getCity(row);
+  const country = getCountry(row);
+  const category = getCategory(row);
+  const status = getStatus(row);
+  const description = getDescription(row);
+  const contact = getContact(row);
+  const tags = splitListValue(getTags(row));
+  const photos = visibleColumns
+    .filter(isImageColumn)
+    .flatMap((column) => splitListValue(row[column]));
+  const links = visibleColumns
+    .filter((column) => isLinkColumn(column) || urlPattern.test(String(row[column] || "")))
+    .flatMap((column) =>
+      splitListValue(row[column]).map((url) => ({ label: column, url }))
+    )
+    .filter(({ url }) => urlPattern.test(url));
+  const mainFields = [
+    { label: "Location", value: [city, country].filter(Boolean).join(", ") },
+    { label: "Category / Type", value: category },
+    { label: "Status", value: status },
+    { label: "Contact", value: contact },
+  ];
+
+  return (
+    <aside className="detailPanel">
+      <div
+        className="panelResizeHandle"
+        onPointerDown={onResizeStart}
+        role="separator"
+        aria-label="Resize location details panel"
+        aria-orientation="vertical"
+        title="Drag left or right to resize details"
+      />
+      <div className="detailPanelHeader">
+        <div>
+          <div className="panelEyebrow">Location detail</div>
+          <h2>{title}</h2>
+        </div>
+        <div className="panelHeaderActions">
+          <span className="panelWidthLabel">{panelWidth}px</span>
+          <button
+            className="iconButton"
+            onClick={onClose}
+            aria-label="Close details"
+            title="Close location details"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div className="photoFrame">
+        {photos.length > 0 ? (
+          <img src={photos[0]} alt={title} />
+        ) : (
+          <div className="photoPlaceholder">No photo URL in this row</div>
+        )}
+      </div>
+
+      {photos.length > 1 && (
+        <div className="photoStrip">
+          {photos.slice(1, 5).map((photo) => (
+            <img key={photo} src={photo} alt={`${title} gallery`} />
+          ))}
+        </div>
+      )}
+
+      <div className="summaryGrid">
+        {mainFields.map((field) => (
+          <div key={field.label} className="summaryItem">
+            <span>{field.label}</span>
+            <strong>{field.value || "—"}</strong>
+          </div>
+        ))}
+      </div>
+
+      {description && (
+        <section className="panelSection">
+          <h3>Description</h3>
+          <p>{description}</p>
+        </section>
+      )}
+
+      {tags.length > 0 && (
+        <section className="panelSection">
+          <h3>Tags</h3>
+          <div className="tagList">
+            {tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {links.length > 0 && (
+        <section className="panelSection">
+          <h3>Documents & links</h3>
+          <div className="linkList">
+            {links.map(({ label, url }) => (
+              <a key={`${label}-${url}`} href={url} target="_blank" rel="noreferrer">
+                {label}: {url}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="panelSection">
+        <div className="sectionTitleRow">
+          <h3>All fields</h3>
+          <button className="textButton" onClick={onExport}>
+            Export details
+          </button>
+        </div>
+        <div className="allFieldsList">
+          {visibleColumns.map((column) => (
+            <div key={column} className="allFieldItem">
+              <strong>{column}</strong>
+              <span>{row[column] || "—"}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </aside>
+  );
+}
+
 function App() {
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
@@ -20,35 +269,27 @@ function App() {
   const [showMap, setShowMap] = useState(false);
   const [showColumnPanel, setShowColumnPanel] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [detailPanelWidth, setDetailPanelWidth] = useState(defaultDetailPanelWidth);
+  const [isResizingDetailPanel, setIsResizingDetailPanel] = useState(false);
+  const mapDetailLayoutRef = useRef(null);
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({});
 
-  const hiddenColumns = ["latitude", "longitude", "lat", "lng", "long"];
-
-  const normalize = (text) => String(text || "").trim().toLowerCase();
-
-  const isHiddenColumn = (column) => hiddenColumns.includes(normalize(column));
-
   const visibleColumns = columns.filter((column) => !isHiddenColumn(column));
 
-  const getLat = (row) =>
-    row.latitude || row.Latitude || row.LAT || row.lat || row.Lat;
-
-  const getLng = (row) =>
-    row.longitude ||
-    row.Longitude ||
-    row.LONG ||
-    row.lng ||
-    row.Lng ||
-    row.long;
-
   const loadCSVData = (data, name = "Uploaded CSV") => {
-    const cleanData = data.filter((row) =>
-      Object.values(row).some((value) => String(value || "").trim() !== "")
-    );
+    const cleanData = data
+      .filter((row) =>
+        Object.values(row).some((value) => String(value || "").trim() !== "")
+      )
+      .map((row, index) => ({ ...row, __rowId: `${name}-${index}` }));
 
-    const detectedColumns = cleanData.length > 0 ? Object.keys(cleanData[0]) : [];
+    const detectedColumns =
+      cleanData.length > 0
+        ? Object.keys(cleanData[0]).filter((column) => column !== "__rowId")
+        : [];
     const displayColumns = detectedColumns.filter(
       (column) => !isHiddenColumn(column)
     );
@@ -56,7 +297,6 @@ function App() {
     setRows(cleanData);
     setColumns(detectedColumns);
 
-    // Default: show first 6 useful columns only
     setSelectedColumns(displayColumns.slice(0, 6));
 
     setFileName(name);
@@ -64,6 +304,8 @@ function App() {
     setFilters({});
     setShowMap(false);
     setExpandedRow(null);
+    setSelectedRowId(null);
+    setDetailPanelWidth(defaultDetailPanelWidth);
   };
 
   useEffect(() => {
@@ -77,6 +319,41 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!isResizingDetailPanel) return undefined;
+
+    const handlePointerMove = (event) => {
+      const layoutRect = mapDetailLayoutRef.current?.getBoundingClientRect();
+      if (!layoutRect) return;
+
+      const availableMaxWidth = Math.max(
+        minDetailPanelWidth,
+        layoutRect.width - minDetailPanelWidth
+      );
+      const nextWidth = layoutRect.right - event.clientX;
+      const clampedWidth = Math.min(
+        Math.max(nextWidth, minDetailPanelWidth),
+        Math.min(maxDetailPanelWidth, availableMaxWidth)
+      );
+
+      setDetailPanelWidth(Math.round(clampedWidth));
+    };
+
+    const stopResizing = () => setIsResizingDetailPanel(false);
+
+    document.body.classList.add("isResizingDetailPanel");
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", stopResizing);
+    window.addEventListener("pointercancel", stopResizing);
+
+    return () => {
+      document.body.classList.remove("isResizingDetailPanel");
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", stopResizing);
+      window.removeEventListener("pointercancel", stopResizing);
+    };
+  }, [isResizingDetailPanel]);
+
   const getUniqueValues = (columnName) => {
     return [
       ...new Set(
@@ -87,13 +364,12 @@ function App() {
     ].sort();
   };
 
-  const filterColumns = selectedColumns;
-
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
+      const searchableColumns = selectedColumns.length ? selectedColumns : visibleColumns;
       const matchesSearch =
         !search ||
-        selectedColumns.some((column) =>
+        searchableColumns.some((column) =>
           String(row[column] || "")
             .toLowerCase()
             .includes(search.toLowerCase())
@@ -108,9 +384,37 @@ function App() {
 
       return matchesSearch && matchesFilters;
     });
-  }, [rows, search, filters, selectedColumns]);
+  }, [rows, search, filters, selectedColumns, visibleColumns]);
 
-  const mapRows = filteredRows.filter((row) => getLat(row) && getLng(row));
+  const mapRows = filteredRows.filter((row) => {
+    const lat = Number(getLat(row));
+    const lng = Number(getLng(row));
+    return Number.isFinite(lat) && Number.isFinite(lng);
+  });
+
+  const selectedRow =
+    filteredRows.find((row) => row.__rowId === selectedRowId) || null;
+  const mapReferenceRow = selectedRow || mapRows[0] || filteredRows[0] || null;
+
+  const mapCenter = mapReferenceRow
+    ? [
+        Number(getLat(mapReferenceRow)) || 45.4215,
+        Number(getLng(mapReferenceRow)) || -75.6972,
+      ]
+    : [45.4215, -75.6972];
+
+  const openDetailPanel = (rowId) => {
+    if (!selectedRowId) {
+      setDetailPanelWidth(defaultDetailPanelWidth);
+    }
+
+    setSelectedRowId(rowId);
+  };
+
+  const startDetailPanelResize = (event) => {
+    event.preventDefault();
+    setIsResizingDetailPanel(true);
+  };
 
   const handleCSVUpload = (event) => {
     const file = event.target.files[0];
@@ -155,43 +459,70 @@ function App() {
   };
 
   const downloadCSV = () => {
-  if (!filteredRows.length) {
-    alert("No filtered data to download.");
-    return;
-  }
+    if (!filteredRows.length) {
+      alert("No filtered data to download.");
+      return;
+    }
 
-  const exportData = filteredRows.map((row) => {
-    const newRow = {};
+    const columnsToExport = selectedColumns.length ? selectedColumns : visibleColumns;
+    const exportData = filteredRows.map((row) => {
+      const newRow = {};
 
-    selectedColumns.forEach((column) => {
-      newRow[column] = row[column];
+      columnsToExport.forEach((column) => {
+        newRow[column] = row[column];
+      });
+
+      return newRow;
     });
 
-    return newRow;
-  });
+    const csv = Papa.unparse(exportData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
 
-  const csv = Papa.unparse(exportData);
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `filtered-${fileName.replace(".csv", "")}.csv`;
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `filtered-${fileName.replace(".csv", "")}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
-  URL.revokeObjectURL(url);
-};
+  const exportSelectedDetails = () => {
+    if (!selectedRow) return;
+
+    const detailData = visibleColumns.reduce((details, column) => {
+      details[column] = selectedRow[column] || "";
+      return details;
+    }, {});
+    const blob = new Blob([JSON.stringify(detailData, null, 2)], {
+      type: "application/json;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const safeTitle = String(getTitle(selectedRow) || "location-details")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeTitle || "location-details"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="page">
       <header className="hero">
         <h1>Policy Map Tool</h1>
         <p>
-          Upload any CSV file, choose columns, filter the data, download results,
-          and view selected locations on a map.
+          Upload any CSV file, filter the table, then choose “Show on Map” or
+          “View details” when you are ready to explore mapped locations and
+          open rich profiles with photos, links, tags, and all fields.
         </p>
       </header>
 
@@ -242,7 +573,7 @@ function App() {
         )}
 
         <div className="filterGrid">
-          {filterColumns.map((column) => (
+          {selectedColumns.map((column) => (
             <select
               key={column}
               value={filters[column] || ""}
@@ -272,51 +603,78 @@ function App() {
       </section>
 
       <div className="resultInfo">
-        Showing <strong>{filteredRows.length}</strong> result(s)
+        Showing <strong>{filteredRows.length}</strong> result(s) with{" "}
+        <strong>{mapRows.length}</strong> mapped location(s)
       </div>
 
       {showMap && (
-        <div className="mapBox">
-          <MapContainer
-            center={[45.4215, -75.6972]}
-            zoom={5}
-            scrollWheelZoom={true}
-            className="map"
-          >
-            <TileLayer
-              attribution="&copy; OpenStreetMap contributors"
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+        <div
+          ref={mapDetailLayoutRef}
+          className={`mapDetailLayout ${selectedRow ? "hasDetailPanel" : ""}`}
+          style={{ "--detail-panel-width": `${detailPanelWidth}px` }}
+        >
+          <div className="mapBox">
+            <MapContainer
+              center={mapCenter}
+              zoom={5}
+              scrollWheelZoom={true}
+              className="map"
+            >
+              <TileLayer
+                attribution="&copy; OpenStreetMap contributors"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MapFocus row={selectedRow} />
+              <MapSizeInvalidator
+                panelWidth={detailPanelWidth}
+                hasDetailPanel={Boolean(selectedRow)}
+              />
 
-            {mapRows.map((row, index) => (
-              <Marker
-                key={index}
-                position={[Number(getLat(row)), Number(getLng(row))]}
-                icon={markerIcon}
-              >
-                <Popup>
-                  {selectedColumns.slice(0, 6).map((column) => (
-                    <div key={column}>
-                      <strong>{column}:</strong> {row[column]}
+              {mapRows.map((row) => (
+                <Marker
+                  key={row.__rowId}
+                  position={[Number(getLat(row)), Number(getLng(row))]}
+                  icon={markerIcon}
+                >
+                  <Popup>
+                    <div className="popupCard">
+                      <strong>{getTitle(row) || "Location"}</strong>
+                      {[getCity(row), getCountry(row)].filter(Boolean).join(", ")}
+                      <button onClick={() => openDetailPanel(row.__rowId)}>
+                        View details
+                      </button>
                     </div>
-                  ))}
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+
+          {selectedRow && (
+            <DetailPanel
+              row={selectedRow}
+              visibleColumns={visibleColumns}
+              onClose={() => setSelectedRowId(null)}
+              onExport={exportSelectedDetails}
+              onResizeStart={startDetailPanelResize}
+              panelWidth={detailPanelWidth}
+            />
+          )}
         </div>
       )}
 
       <div className="tableWrapper">
         {selectedColumns.length === 0 ? (
           <div className="emptyState">
-            Choose at least one column to display the table.
+            Choose at least one column to display the table. The map detail panel
+            can still use all available CSV columns.
           </div>
         ) : (
           <table>
             <thead>
               <tr>
                 <th className="expandColumn"></th>
+                <th className="actionColumn">Details</th>
                 {selectedColumns.map((column) => (
                   <th key={column}>{column}</th>
                 ))}
@@ -325,41 +683,52 @@ function App() {
 
             <tbody>
               {filteredRows.map((row, rowIndex) => (
-                <>
-                  <tr key={`row-${rowIndex}`}>
+                <Fragment key={row.__rowId}>
+                  <tr className={row.__rowId === selectedRowId ? "selectedRow" : ""}>
                     <td className="expandColumn">
                       <button
                         className="expandButton"
                         onClick={() =>
                           setExpandedRow(
-                            expandedRow === rowIndex ? null : rowIndex
+                            expandedRow === row.__rowId ? null : row.__rowId
                           )
                         }
                       >
-                        {expandedRow === rowIndex ? "−" : "+"}
+                        {expandedRow === row.__rowId ? "−" : "+"}
+                      </button>
+                    </td>
+                    <td className="actionColumn">
+                      <button
+                        className="viewButton"
+                        onClick={() => {
+                          openDetailPanel(row.__rowId);
+                          setShowMap(true);
+                        }}
+                      >
+                        View details
                       </button>
                     </td>
 
                     {selectedColumns.map((column) => (
-                     <td
-                      key={column}
-                      className={
-                        column.toLowerCase().includes("description") ||
-                        column.toLowerCase().includes("policy") ||
-                        column.toLowerCase().includes("detail") ||
-                        column.toLowerCase().includes("note")
-                          ? "textColumn"
-                          : ""
-                      }
-                    >
+                      <td
+                        key={column}
+                        className={
+                          column.toLowerCase().includes("description") ||
+                          column.toLowerCase().includes("policy") ||
+                          column.toLowerCase().includes("detail") ||
+                          column.toLowerCase().includes("note")
+                            ? "textColumn"
+                            : ""
+                        }
+                      >
                         <div className="cellText">{row[column]}</div>
                       </td>
                     ))}
                   </tr>
 
-                  {expandedRow === rowIndex && (
+                  {expandedRow === row.__rowId && (
                     <tr key={`details-${rowIndex}`}>
-                      <td colSpan={selectedColumns.length + 1}>
+                      <td colSpan={selectedColumns.length + 2}>
                         <div className="detailsBox">
                           {visibleColumns.map((column) => (
                             <div key={column} className="detailItem">
@@ -371,7 +740,7 @@ function App() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
